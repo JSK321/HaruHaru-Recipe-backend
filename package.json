@@ -1,0 +1,24 @@
+{
+  "name": "ummas-cb-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSK321/ummas-cb-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JSK321/ummas-cb-backend/issues"
+  },
+  "homepage": "https://github.com/JSK321/ummas-cb-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.4.0"
+  }
+}
