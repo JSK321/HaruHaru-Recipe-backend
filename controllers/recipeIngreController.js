@@ -22,7 +22,13 @@ const checkAuthStatus = request => {
 }
 
 router.get("/", (req, res) => {
-    db.Ingredients.findAll().then(ingredients => {
+    db.recipeIngredients.findAll({
+        include: [
+            db.measurementQuant,
+            db.measurementUnit,
+            db.Ingredients
+        ]
+    }).then(ingredients => {
         res.json(ingredients)
     }).catch(err => {
         console.log(err)
@@ -31,10 +37,15 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:id", (req, res) => {
-    db.Ingredients.findOne({
+    db.recipeIngredients.findOne({
         where: {
             id: req.params.id
-        }
+        },
+        include: [
+            db.measurementQuant,
+            db.measurementUnit,
+            db.Ingredients
+        ]
     }).then(foundIngredient => {
         res.json(foundIngredient)
     }).catch(err => {
@@ -48,7 +59,7 @@ router.get("/:id", (req, res) => {
 //     if(!loggedInUser){
 //         return res.status(401).send("Please login first")
 //     }
-//     db.Ingredients.create({
+//     db.recipeIngredients.create({
 
 //     })
 // })
