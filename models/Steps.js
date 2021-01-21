@@ -4,7 +4,6 @@ module.exports = function(sequelize, DataTypes){
     })
 
     Steps.associate = function(models) {
-        Steps.belongsTo(models.Ingredients)
         Steps.belongsTo(models.Recipes)
     }
 
