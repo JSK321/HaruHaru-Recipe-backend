@@ -2,7 +2,7 @@ module.exports = function (sequelize, DataTypes){
     var recipeIngredients = sequelize.define('recipeIngredients', {
         ingredientId: DataTypes.INTEGER,
         measurementUnitId: DataTypes.INTEGER,
-        measurementQuant: DataTypes.INTEGER
+        measurementQuantId: DataTypes.INTEGER
     })
 
     recipeIngredients.associate = function(models){

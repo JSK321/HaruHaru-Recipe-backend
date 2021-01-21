@@ -37,7 +37,7 @@ router.get("/:id", (req, res) => {
             id: req.params.id
         },
         include:[
-            db.Ingredients,
+            db.recipeIngredients,
             db.Steps
         ]
     }).then(recipe => {
