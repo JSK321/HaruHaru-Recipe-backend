@@ -1,16 +1,16 @@
 module.exports = function (sequelize, DataTypes){
-    var recipeIngredients = sequelize.define('recipeIngredients', {
+    var RecipeIngredients = sequelize.define('RecipeIngredients', {
         ingredientId: DataTypes.INTEGER,
         measurementUnitId: DataTypes.INTEGER,
         measurementQuantId: DataTypes.INTEGER
     })
 
-    recipeIngredients.associate = function(models){
-        recipeIngredients.belongsTo(models.Recipes)
-        recipeIngredients.hasMany(models.measurementQuant)
-        recipeIngredients.hasMany(models.measurementUnits)
-        recipeIngredients.hasMany(models.ingredients)
+    RecipeIngredients.associate = function(models){
+        RecipeIngredients.belongsTo(models.Recipes)
+        RecipeIngredients.hasMany(models.MeasurementQuant)
+        RecipeIngredients.hasMany(models.MeasurementUnits)
+        RecipeIngredients.hasMany(models.Ingredients)
     }
 
-    return recipeIngredients
+    return RecipeIngredients
 }

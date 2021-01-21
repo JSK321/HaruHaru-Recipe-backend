@@ -5,6 +5,7 @@ const router = express.Router();
 const userRoutes = require('./usersController')
 const recipeRoutes = require('./recipesController')
 const ingredientRoutes = require('./recipeIngreController')
+const measurementQuantRoutes = require('./measurementQuantController')
 
 router.get("/", (req, res) => {
     res.send("welcome")
@@ -15,5 +16,6 @@ router.get("/", (req, res) => {
 router.use('/api/users', userRoutes)
 router.use('/api/recipes', recipeRoutes)
 router.use('/api/recipeIngre', ingredientRoutes)
+router.use('/api/measurementQuant', measurementQuantRoutes)
 
 module.exports = router;

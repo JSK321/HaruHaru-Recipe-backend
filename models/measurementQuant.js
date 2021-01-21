@@ -1,12 +1,12 @@
 module.exports = function (sequelize, DataTypes){
-    var measurementQuant = sequelize.define('measurementQuant', {
+    var MeasurementQuant = sequelize.define('MeasurementQuant', {
         quantId: DataTypes.INTEGER,
         quantAmount: DataTypes.STRING
     })
 
-    measurementQuant.associate = function(models){
-        measurementQuant.belongsTo(models.recipeIngredients)
+    MeasurementQuant.associate = function(models){
+        MeasurementQuant.belongsTo(models.RecipeIngredients)
     }
 
-    return measurementQuant
+    return MeasurementQuant
 }
