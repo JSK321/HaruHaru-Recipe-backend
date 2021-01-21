@@ -4,6 +4,7 @@ const router = express.Router();
 // Import all routes
 const userRoutes = require('./usersController')
 const recipeRoutes = require('./recipesController')
+const ingredientRoutes = require('./recipeIngreController')
 
 router.get("/", (req, res) => {
     res.send("welcome")
@@ -13,5 +14,6 @@ router.get("/", (req, res) => {
 // Use all routes
 router.use('/api/users', userRoutes)
 router.use('/api/recipes', recipeRoutes)
+router.use('/api/recipeIngre', ingredientRoutes)
 
 module.exports = router;

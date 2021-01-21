@@ -1,12 +1,11 @@
 module.exports = function (sequelize, DataTypes){
-    var Ingredients = sequelize.define('Ingredients', {
-        ingredientName: DataTypes.STRING,
-        quantity: DataTypes.INTEGER
+    var ingredients = sequelize.define('ingredients', {
+        ingredientName: DataTypes.STRING
     })
 
-    Ingredients.associate = function(models){
-        Ingredients.belongsTo(models.Recipes)
+    ingredients.associate = function(models){
+        ingredients.belongsTo(models.recipeIngredients)
     }
 
-    return Ingredients
+    return ingredients
 }
