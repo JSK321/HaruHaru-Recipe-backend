@@ -10,6 +10,7 @@ module.exports = function (sequelize, DataTypes){
         RecipeIngredients.hasMany(models.MeasurementQuant)
         RecipeIngredients.hasMany(models.MeasurementUnits)
         RecipeIngredients.hasMany(models.Ingredients)
+        RecipeIngredients.hasMany(models.Steps)
     }
 
     return RecipeIngredients

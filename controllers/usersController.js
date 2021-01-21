@@ -21,7 +21,7 @@ const checkAuthStatus = request => {
 }
 
 router.get("/", (req, res) => {
-    db.User.findAll().then(users => {
+    db.Users.findAll().then(users => {
         res.json(users)
     }).catch(err => {
         console.log(err)
@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
 })
 
 router.post("/", (req, res) => {
-    db.User.create({
+    db.Users.create({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password
@@ -43,7 +43,7 @@ router.post("/", (req, res) => {
 })
 
 router.post("/login", (req, res) => {
-    db.User.findOne({
+    db.Users.findOne({
         where: {
             email: req.body.email
         }
@@ -70,7 +70,7 @@ router.put("/:id", (req,res) => {
     if(!loggedInUser){
         return res.status(401).send("Please login first")
     }
-    db.User.findOne({
+    db.Users.findOne({
         where: {
             id: req.params.id
         }
@@ -101,7 +101,7 @@ router.delete("/:id", (req,res) => {
     if(!loggedInUser){
         return res.status(401).send("Please login first")
     }
-    db.User.findOne({
+    db.Users.findOne({
         where: {
             id: req.params.id
         }
@@ -128,7 +128,7 @@ router.get("/secretProfile", (req, res) => {
     if (!loggedInUser) {
         return res.status(401).send("Invalid token")
     }
-    db.User.findOne({
+    db.Users.findOne({
         where: {
             id: loggedInUser.id
         },

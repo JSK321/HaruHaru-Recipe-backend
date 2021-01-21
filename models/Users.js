@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 
 module.exports = function (sequelize, DataTypes) {
-    var Users = sequelize.define('User', {
+    var Users = sequelize.define('Users', {
         name: DataTypes.STRING,
         password: {
             type: DataTypes.STRING,

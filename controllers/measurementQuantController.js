@@ -57,10 +57,15 @@ router.post("/", (req,res) => {
     if(!loggedInUser){
         return res.status(401).send("Please login first")
     }
-    // db.MeasurementQuant.create({
-    //     quantAmount: req.body.quantAmount,
-    //     quantId: 
-    // })
+    db.MeasurementQuant.create({
+        quantAmount: req.body.quantAmount,
+        RecipeIngredientId: req.body.RecipeIngredientId
+    }).then(result => {
+        res.json(result)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to create new measurement quantity")
+    })
 })
 
 module.exports = router;
