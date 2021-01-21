@@ -22,11 +22,12 @@ const checkAuthStatus = request => {
 }
 
 router.get("/", (req, res) => {
-    db.recipeIngredients.findAll({
+    db.RecipeIngredients.findAll({
         include: [
-            db.measurementQuant,
-            db.measurementUnit,
-            db.Ingredients
+            db.MeasurementQuant,
+            // db.MeasurementUnit,
+            db.Ingredients,
+            // db.Steps
         ]
     }).then(ingredients => {
         res.json(ingredients)
@@ -37,13 +38,13 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:id", (req, res) => {
-    db.recipeIngredients.findOne({
+    db.RecipeIngredients.findOne({
         where: {
             id: req.params.id
         },
         include: [
-            db.measurementQuant,
-            db.measurementUnit,
+            db.MeasurementQuant,
+            // db.measurementUnit,
             db.Ingredients
         ]
     }).then(foundIngredient => {
@@ -54,14 +55,80 @@ router.get("/:id", (req, res) => {
     })
 })
 
-// router.post("/", (req, res) => {
-//     const loggedInUser = checkAuthStatus(req)
-//     if(!loggedInUser){
-//         return res.status(401).send("Please login first")
-//     }
-//     db.recipeIngredients.create({
+router.post("/", (req, res) => {
+    const loggedInUser = checkAuthStatus(req)
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first")
+    }
+    db.RecipeIngredients.create({
+        ingredientId: req.body.ingredientId,
+        // measurementUnitId: req.body.measurementUnitId,
+        measurementQuantId: req.body.measurementQuantId,
+        RecipeId: req.body.RecipeId
+    }).then(result => {
+        res.json(result)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to create new recipe")
+    })
+})
 
-//     })
-// })
+router.put("/:id", (req, res) => {
+    const loggedInUser = checkAuthStatus(req)
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first")
+    }
+    db.RecipeIngredients.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(data => {
+        if (loggedInUser.id === data.RecipeId) {
+            db.RecipeIngredients.update({
+                ingredientId: req.body.ingredientId,
+                measurementQuantId: req.body.measurementQuantId
+            },
+                {
+                    where: {
+                        id: data.id
+                    }
+                }).then(result => {
+                    res.json(result)
+                }).catch(err => {
+                    console.log(err)
+                    res.status(500).send("Unable to update recipe")
+                })
+        } else {
+            return res.status(401).send("Not your recipe!")
+        }
+    })
+})
+
+router.delete("/:id", (req, res) => {
+    const loggedInUser = checkAuthStatus(req);
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first,")
+    }
+    db.RecipeIngredients.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(data => {
+        if (loggedInUser.id === data.RecipeId) {
+            db.RecipeIngredients.destroy({
+                where: {
+                    id: data.id
+                }
+            }).then(result => {
+                res.json(result)
+            }).catch(err => {
+                console.log(err)
+                res.status(500).send("Unable to find recipe")
+            })
+        } else {
+            return res.status(401).send("Not your recipe!")
+        }
+    })
+})
 
 module.exports = router;

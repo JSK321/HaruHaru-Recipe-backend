@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes){
     var MeasurementQuant = sequelize.define('MeasurementQuant', {
-        quantId: DataTypes.INTEGER,
+        // quantId: DataTypes.INTEGER,
         quantAmount: DataTypes.STRING
     })
 

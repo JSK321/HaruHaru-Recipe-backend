@@ -22,7 +22,7 @@ const checkAuthStatus = request => {
 
 router.get("/", (req,res) => {
     db.Recipes.findAll({
-        include: [db.Steps]
+        // include: [db.Steps]
     }).then(recipe => {
         res.json(recipe)
     }).catch(err => {
@@ -37,8 +37,9 @@ router.get("/:id", (req, res) => {
             id: req.params.id
         },
         include:[
-            db.recipeIngredients,
-            db.Steps
+            // db.MeasurementQuant
+            // db.recipeIngredients,
+            // db.Steps
         ]
     }).then(recipe => {
         res.json(recipe)
@@ -56,7 +57,7 @@ router.post("/", (req,res) => {
     db.Recipes.create({
         recipeName: req.body.recipeName,
         recipeImage: req.body.recipeImage,
-        UserId: loggedInUser.id
+        UserId: loggedInUser.id,
     }).then(newRecipe => {
         res.json(newRecipe)
     }).catch(err => {
