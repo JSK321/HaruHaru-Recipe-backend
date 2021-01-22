@@ -21,88 +21,88 @@ const checkAuthStatus = request => {
     return loggedInUser
 }
 
-router.get("/", (req, res) => {
-    db.MeasurementQuant.findAll({
+router.get("/", (req,res) => {
+    db.Ingredients.findAll({
     }).then(data => {
         res.json(data)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to find measurement quantity")
+        res.status(401).send("Unable to find ingredients")
     })
 })
 
-router.get("/:id", (req, res) => {
-    db.MeasurementQuant.findOne({
+router.get("/:id", (req,res) => {
+    db.Ingredients.findOne({
         where: {
             id: req.params.id
-        },
+        }
     }).then(data => {
         res.json(data)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to find measurement quantity")
+        res.status(500).send("Unable to find ingredients")
     })
 })
 
-router.post("/", (req, res) => {
+router.post("/", (req,res) => {
     const loggedInUser = checkAuthStatus(req)
-    if (!loggedInUser) {
+    if(!loggedInUser){
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.create({
-        quantAmount: req.body.quantAmount,
-        RecipeIngredientId: req.body.RecipeIngredientId,
+    db.Ingredients.create({
+        ingredientName: req.body.ingredientName,
+        RecipeIngredientId: req.body.RecipeIngredientId,    
         UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to create new measurement quantity")
+        res.status(500).send("Unable to create new ingredient")
     })
 })
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req,res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.findOne({
+    db.Ingredients.findOne({
         where: {
             id: req.params.id
         }
     }).then(data => {
-        if (loggedInUser.id === data.UserId) {
-            db.MeasurementQuant.update({
-                quantAmount: req.body.quantAmount
+        if(loggedInUser.id === data.UserId){
+            db.Ingredients.update({
+                ingredientName: req.body.ingredientName
             },
-                {
-                    where: {
-                        id: data.id
-                    }
-                }).then(result => {
-                    res.json(result)
-                }).catch(err => {
-                    console.log(err)
-                    res.status(500).send("Unable to find measurement quantity")
-                })
+            {
+                where: {
+                    id: data.id
+                }
+            }).then(result => {
+                res.json(result)
+            }).catch(err => {
+                console.log(err)
+                res.status(500).send("Unable to find ingredient")
+            })
         } else {
             return res.status(401).send("Not your recipe!")
         }
     })
 })
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req,res)=> {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.findOne({
+    db.Ingredients.findOne({
         where: {
             id: req.params.id
         }
     }).then(data => {
-        if (loggedInUser.id === data.UserId) {
-            db.MeasurementQuant.destroy({
+        if(loggedInUser.id === data.UserId){
+            db.Ingredients.destroy({
                 where: {
                     id: data.id
                 }

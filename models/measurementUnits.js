@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes){
     var MeasurementUnits = sequelize.define('MeasurementUnits', {
-        measurementId: DataTypes.INTEGER,
-        measurementUnit: DataTypes.STRING
+        measurementUnit: DataTypes.STRING,
+        UserId: DataTypes.INTEGER
     })
 
     MeasurementUnits.associate = function(models){
