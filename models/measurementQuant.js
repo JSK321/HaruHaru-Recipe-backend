@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes){
     var MeasurementQuant = sequelize.define('MeasurementQuant', {
-        // quantId: DataTypes.INTEGER,
-        quantAmount: DataTypes.STRING
+        quantAmount: DataTypes.STRING,
+        UserId: DataTypes.INTEGER
     })
 
     MeasurementQuant.associate = function(models){

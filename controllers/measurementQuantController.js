@@ -21,7 +21,7 @@ const checkAuthStatus = request => {
     return loggedInUser
 }
 
-router.get("/", (req,res)=> {
+router.get("/", (req, res) => {
     db.MeasurementQuant.findAll({
         include: [
             db.MeasurementUnit,
@@ -35,10 +35,10 @@ router.get("/", (req,res)=> {
     })
 })
 
-router.get("/:id", (req,res) => {
+router.get("/:id", (req, res) => {
     db.MeasurementQuant.findOne({
         where: {
-            id:req.params.id
+            id: req.params.id
         },
         include: [
             db.MeasurementUnit,
@@ -52,19 +52,77 @@ router.get("/:id", (req,res) => {
     })
 })
 
-router.post("/", (req,res) => {
+router.post("/", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.MeasurementQuant.create({
         quantAmount: req.body.quantAmount,
-        RecipeIngredientId: req.body.RecipeIngredientId
+        RecipeIngredientId: req.body.RecipeIngredientId,
+        UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
     }).catch(err => {
         console.log(err)
         res.status(500).send("Unable to create new measurement quantity")
+    })
+})
+
+router.put("/:id", (req, res) => {
+    const loggedInUser = checkAuthStatus(req)
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first")
+    }
+    db.MeasurementQuant.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(data => {
+        if (loggedInUser.id === data.UserId) {
+            db.MeasurementQuant.update({
+                quantAmount: req.body.quantAmount
+            },
+                {
+                    where: {
+                        id: data.id
+                    }
+                }).then(result => {
+                    res.json(result)
+                }).catch(err => {
+                    console.log(err)
+                    res.status(500).send("Unable to find measurement quantity")
+                })
+        } else {
+            return res.status(401).send("Not your recipe!")
+        }
+    })
+})
+
+router.delete("/:id", (req, res) => {
+    const loggedInUser = checkAuthStatus(req)
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first")
+    }
+    db.MeasurementQuant.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(data => {
+        if (loggedInUser.id === data.UserId) {
+            db.MeasurementQuant.destroy({
+                where: {
+                    id: data.id
+                }
+            }).then(result => {
+                res.json(result)
+            }).catch(err => {
+                console.log(err)
+                res.status(500).send("Unable to find recipe")
+            })
+        } else {
+            return res.status(401).send("Not your recipe!")
+        }
     })
 })
 

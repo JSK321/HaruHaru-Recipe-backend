@@ -64,7 +64,8 @@ router.post("/", (req, res) => {
         ingredientId: req.body.ingredientId,
         // measurementUnitId: req.body.measurementUnitId,
         measurementQuantId: req.body.measurementQuantId,
-        RecipeId: req.body.RecipeId
+        RecipeId: req.body.RecipeId,
+        UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
     }).catch(err => {
@@ -83,7 +84,7 @@ router.put("/:id", (req, res) => {
             id: req.params.id
         }
     }).then(data => {
-        if (loggedInUser.id === data.RecipeId) {
+        if (loggedInUser.id === data.UserId) {
             db.RecipeIngredients.update({
                 ingredientId: req.body.ingredientId,
                 measurementQuantId: req.body.measurementQuantId
@@ -114,7 +115,7 @@ router.delete("/:id", (req, res) => {
             id: req.params.id
         }
     }).then(data => {
-        if (loggedInUser.id === data.RecipeId) {
+        if (loggedInUser.id === data.UserId) {
             db.RecipeIngredients.destroy({
                 where: {
                     id: data.id
