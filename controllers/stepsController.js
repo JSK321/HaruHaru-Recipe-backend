@@ -22,25 +22,24 @@ const checkAuthStatus = request => {
 }
 
 router.get("/", (req, res) => {
-    db.MeasurementQuant.findAll({
-    }).then(data => {
+    db.Steps.findAll().then(data => {
         res.json(data)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to find measurement quantity")
+        res.status(401).send("Unable to find recipe directions")
     })
 })
 
 router.get("/:id", (req, res) => {
-    db.MeasurementQuant.findOne({
+    db.Steps.findOne({
         where: {
             id: req.params.id
-        },
+        }
     }).then(data => {
         res.json(data)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to find measurement quantity")
+        res.status(500).send("Unable to find recipe directions")
     })
 })
 
@@ -49,15 +48,15 @@ router.post("/", (req, res) => {
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.create({
-        quantAmount: req.body.quantAmount,
-        RecipeIngredientId: req.body.RecipeIngredientId,
-        UserId: loggedInUser.id
+    db.Steps.create({
+        directions: req.body.directions,
+        RecipeId: req.body.RecipeId,
+        UserId: req.body.UserId
     }).then(result => {
         res.json(result)
     }).catch(err => {
         console.log(err)
-        res.status(500).send("Unable to create new measurement quantity")
+        res.status(500).send("Unable to create recipe directions")
     })
 })
 
@@ -66,24 +65,24 @@ router.put("/:id", (req, res) => {
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.findOne({
+    db.Steps.findOne({
         where: {
             id: req.params.id
         }
-    }).then(data => {
-        if (loggedInUser.id === data.UserId) {
-            db.MeasurementQuant.update({
-                quantAmount: req.body.quantAmount
+    }).then(foundSteps => {
+        if (loggedInUser.id === foundSteps.UserId) {
+            db.Steps.update({
+                directions: req.body.directions
             },
                 {
                     where: {
-                        id: data.id
+                        id: foundSteps.id
                     }
-                }).then(result => {
-                    res.json(result)
+                }).then(updatedSteps => {
+                    res.json(updatedSteps)
                 }).catch(err => {
                     console.log(err)
-                    res.status(500).send("Unable to find measurement quantity")
+                    res.status(500).send("Unable to find recipe")
                 })
         } else {
             return res.status(401).send("Not your recipe!")
@@ -91,26 +90,26 @@ router.put("/:id", (req, res) => {
     })
 })
 
-router.delete("/:id", (req, res) => {
+router.delete('/:id', (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
-    db.MeasurementQuant.findOne({
+    db.Steps.findOne({
         where: {
             id: req.params.id
         }
-    }).then(data => {
-        if (loggedInUser.id === data.UserId) {
-            db.MeasurementQuant.destroy({
+    }).then(foundSteps => {
+        if (loggedInUser.id === foundSteps.UserId) {
+            db.Steps.destroy({
                 where: {
-                    id: data.id
+                    id: req.params.id
                 }
-            }).then(result => {
-                res.json(result)
+            }).then(removedSteps => {
+                res.json(removedSteps)
             }).catch(err => {
                 console.log(err)
-                res.status(500).send("Unable to find recipe")
+                res.status(401).send("Not your recipe!")
             })
         } else {
             return res.status(401).send("Not your recipe!")

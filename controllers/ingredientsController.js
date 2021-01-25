@@ -51,7 +51,7 @@ router.post("/", (req,res) => {
     }
     db.Ingredients.create({
         ingredientName: req.body.ingredientName,
-        RecipeIngredientId: req.body.RecipeIngredientId,    
+        RecipeId: req.body.RecipeId,    
         UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
@@ -73,7 +73,8 @@ router.put("/:id", (req,res) => {
     }).then(data => {
         if(loggedInUser.id === data.UserId){
             db.Ingredients.update({
-                ingredientName: req.body.ingredientName
+                ingredientName: req.body.ingredientName,
+                RecipeId: req.body.RecipeId
             },
             {
                 where: {

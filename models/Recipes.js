@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     })
 
     Recipes.associate = function(models){
-        Recipes.hasMany(models.RecipeIngredients)
+        Recipes.hasMany(models.Ingredients)
         Recipes.hasMany(models.Steps)
         Recipes.belongsTo(models.Users)
     }
