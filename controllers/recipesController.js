@@ -58,6 +58,7 @@ router.post("/", (req, res) => {
     }
     db.Recipes.create({
         recipeName: req.body.recipeName,
+        recipeDescript: req.body.recipeDescript,
         recipeImage: req.body.recipeImage,
         UserId: loggedInUser.id,
     }).then(newRecipe => {
@@ -95,6 +96,7 @@ router.put("/:id", (req, res) => {
         if (loggedInUser.id === foundRecipe.UserId) {
             db.Recipes.update({
                 recipeName: req.body.recipeName,
+                recipeDescript: req.body.recipeDescript,
                 recipeImage: req.body.recipeImage
             },
                 {
