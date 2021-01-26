@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes){
     var Ingredients = sequelize.define('Ingredients', {
-        ingredients: DataTypes.STRING,
+        ingredient: DataTypes.STRING,
         ingredientQuant: DataTypes.INTEGER,
         ingredientUnit: DataTypes.STRING,
         RecipeId: DataTypes.INTEGER

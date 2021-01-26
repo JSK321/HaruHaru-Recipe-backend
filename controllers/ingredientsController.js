@@ -31,6 +31,19 @@ router.get("/", (req,res) => {
     })
 })
 
+router.get("/all/:id", (req,res) => {
+    db.Ingredients.findAll({
+        where: {
+            id: req.params.id
+        }
+    }).then(data => {
+        res.json(data)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to find ingredients for the recipe")
+    })
+})
+
 router.get("/:id", (req,res) => {
     db.Ingredients.findOne({
         where: {
