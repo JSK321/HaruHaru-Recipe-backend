@@ -34,7 +34,7 @@ router.get("/", (req,res) => {
 router.get("/all/:id", (req,res) => {
     db.Ingredients.findAll({
         where: {
-            id: req.params.id
+            RecipeId: req.params.id
         }
     }).then(data => {
         res.json(data)
