@@ -20,9 +20,12 @@ const checkAuthStatus = request => {
     return loggedInUser
 }
 
-router.get("/", (req,res) => {
+router.get("/", (req, res) => {
     db.Recipes.findAll({
-        // include: [db.Steps]
+        include: [
+            db.Ingredients,
+            db.Steps
+        ]
     }).then(recipe => {
         res.json(recipe)
     }).catch(err => {
@@ -36,10 +39,9 @@ router.get("/:id", (req, res) => {
         where: {
             id: req.params.id
         },
-        include:[
-            // db.MeasurementQuant
-            // db.recipeIngredients,
-            // db.Steps
+        include: [
+            db.Ingredients,
+            db.Steps
         ]
     }).then(recipe => {
         res.json(recipe)
@@ -49,9 +51,9 @@ router.get("/:id", (req, res) => {
     })
 })
 
-router.post("/", (req,res) => {
+router.post("/", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Recipes.create({
@@ -73,47 +75,16 @@ router.post("/upload", async (req, res) => {
             upload_preset: 'ummas_cb'
         })
         console.log(uploadedImage)
-        res.json({msg: "Uploaded!"})
+        res.json({ msg: "Uploaded!" })
     } catch (error) {
         console.log(error)
-        res.status(500).json({error: 'Something went wrong'})
+        res.status(500).json({ error: 'Something went wrong' })
     }
 })
 
-router.put("/:id", (req,res) => {
+router.put("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
-        return res.status(401).send("Please login first")
-    }
-    db.Recipes.findOne({
-        where:{
-            id: req.params.id
-        }
-    }).then(foundRecipe => {
-        if(loggedInUser.id === foundRecipe.UserId){
-            db.Recipes.update({
-                recipeName: req.body.recipeName,
-                recipeImage: req.body.recipeImage
-            },
-            {
-                where: {
-                    id: foundRecipe.id
-                }
-            }).then(updatedRecipe => {
-                res.json(updatedRecipe)
-            }).catch(err => {
-                console.log(err)
-                res.status(500).send("Unable to find recipe")
-            })
-        } else {
-            return res.status(401).send("Not your recipe!")
-        }
-    })
-})
-
-router.delete("/:id", (req,res) => {
-    const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Recipes.findOne({
@@ -121,7 +92,38 @@ router.delete("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(foundRecipe => {
-        if(loggedInUser.id === foundRecipe.UserId){
+        if (loggedInUser.id === foundRecipe.UserId) {
+            db.Recipes.update({
+                recipeName: req.body.recipeName,
+                recipeImage: req.body.recipeImage
+            },
+                {
+                    where: {
+                        id: foundRecipe.id
+                    }
+                }).then(updatedRecipe => {
+                    res.json(updatedRecipe)
+                }).catch(err => {
+                    console.log(err)
+                    res.status(500).send("Unable to find recipe")
+                })
+        } else {
+            return res.status(401).send("Not your recipe!")
+        }
+    })
+})
+
+router.delete("/:id", (req, res) => {
+    const loggedInUser = checkAuthStatus(req)
+    if (!loggedInUser) {
+        return res.status(401).send("Please login first")
+    }
+    db.Recipes.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(foundRecipe => {
+        if (loggedInUser.id === foundRecipe.UserId) {
             db.Recipes.destroy({
                 where: {
                     id: foundRecipe.id
