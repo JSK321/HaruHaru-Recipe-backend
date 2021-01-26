@@ -50,8 +50,10 @@ router.post("/", (req,res) => {
         return res.status(401).send("Please login first")
     }
     db.Ingredients.create({
-        ingredientName: req.body.ingredientName,
-        RecipeId: req.body.RecipeId,    
+        ingredient: req.body.ingredient,
+        ingredientQuant: req.body.ingredientQuant,
+        ingredientUnit: req.body.ingredientUnit,
+        RecipeId: req.body.RecipeId,   
         UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
@@ -73,7 +75,9 @@ router.put("/:id", (req,res) => {
     }).then(data => {
         if(loggedInUser.id === data.UserId){
             db.Ingredients.update({
-                ingredientName: req.body.ingredientName,
+                ingredient: req.body.ingredient,
+                ingredientQuant: req.body.ingredientQuant,
+                ingredientUnit: req.body.ingredientUnit,
                 RecipeId: req.body.RecipeId
             },
             {
