@@ -65,9 +65,9 @@ router.post("/login", (req, res) => {
     })
 })
 
-router.put("/:id", (req,res) => {
+router.put("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Users.findOne({
@@ -75,7 +75,7 @@ router.put("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(user => {
-        if(loggedInUser.id === user.id) {
+        if (loggedInUser.id === user.id) {
             db.User.update({
                 name: req.body.name,
                 email: req.body.email,
@@ -96,9 +96,9 @@ router.put("/:id", (req,res) => {
     })
 })
 
-router.delete("/:id", (req,res) => {
+router.delete("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Users.findOne({
@@ -106,7 +106,7 @@ router.delete("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(user => {
-        if(loggedInUser.id === user.id){
+        if (loggedInUser.id === user.id) {
             db.User.destroy({
                 where: {
                     id: user.id
@@ -133,9 +133,9 @@ router.get("/secretProfile", (req, res) => {
             id: loggedInUser.id
         },
         include: [
-            {
-                model: db.Recipes,
-            }
+            db.Recipes,
+            db.Ingredients,
+            db.Steps
         ]
     }).then(user => {
         res.json(user)
