@@ -32,6 +32,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
     db.Users.create({
         name: req.body.name,
+        accountName: req.body.accountName,
         email: req.body.email,
         password: req.body.password
     }).then(newUser => {
@@ -55,7 +56,8 @@ router.post("/login", (req, res) => {
             const userTokenInfo = {
                 email: foundUser.email,
                 id: foundUser.id,
-                name: foundUser.name
+                name: foundUser.name,
+                accountName: foundUser.accountName
             }
             const token = jwt.sign(userTokenInfo, process.env.JWT_SECRET, { expiresIn: "2h" })
             return res.status(200).json({ token: token })
@@ -65,9 +67,9 @@ router.post("/login", (req, res) => {
     })
 })
 
-router.put("/:id", (req,res) => {
+router.put("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Users.findOne({
@@ -75,9 +77,10 @@ router.put("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(user => {
-        if(loggedInUser.id === user.id) {
+        if (loggedInUser.id === user.id) {
             db.User.update({
                 name: req.body.name,
+                accountName: req.body.accountName,
                 email: req.body.email,
                 password: req.body.password
             }, {
@@ -96,9 +99,9 @@ router.put("/:id", (req,res) => {
     })
 })
 
-router.delete("/:id", (req,res) => {
+router.delete("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Users.findOne({
@@ -106,7 +109,7 @@ router.delete("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(user => {
-        if(loggedInUser.id === user.id){
+        if (loggedInUser.id === user.id) {
             db.User.destroy({
                 where: {
                     id: user.id
@@ -133,9 +136,10 @@ router.get("/secretProfile", (req, res) => {
             id: loggedInUser.id
         },
         include: [
-            {
-                model: db.Recipes,
-            }
+            db.Recipes,
+            db.SavedRecipes,
+            db.Ingredients,
+            db.Steps
         ]
     }).then(user => {
         res.json(user)

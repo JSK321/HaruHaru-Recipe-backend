@@ -3,6 +3,11 @@ const bcrypt = require('bcrypt')
 module.exports = function (sequelize, DataTypes) {
     var Users = sequelize.define('Users', {
         name: DataTypes.STRING,
+        accountName: {
+            type: DataTypes.STRING,
+            required: true,
+            unique: true,
+        },
         password: {
             type: DataTypes.STRING,
             required: true,
@@ -14,14 +19,15 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: true
         },
-        // profileImage: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        // }
+        profileImage: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     });
 
     Users.associate = function (models) {
-        Users.hasMany(models.Recipes);
+        Users.hasMany(models.Recipes)
+        Users.hasMany(models.SavedRecipes)
         Users.hasMany(models.Ingredients)
         Users.hasMany(models.Steps)
     };
