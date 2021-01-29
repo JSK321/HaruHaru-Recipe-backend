@@ -5,7 +5,8 @@ module.exports = function (sequelize, DataTypes) {
         recipeImage: {
             type: DataTypes.STRING,
             allowNull: true
-        }
+        },
+        recipeId: DataTypes.INTEGER
     })
 
     SavedRecipes.associate= function (models){

@@ -32,6 +32,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
     db.Users.create({
         name: req.body.name,
+        accountName: req.body.accountName,
         email: req.body.email,
         password: req.body.password
     }).then(newUser => {
@@ -55,7 +56,8 @@ router.post("/login", (req, res) => {
             const userTokenInfo = {
                 email: foundUser.email,
                 id: foundUser.id,
-                name: foundUser.name
+                name: foundUser.name,
+                accountName: foundUser.accountName
             }
             const token = jwt.sign(userTokenInfo, process.env.JWT_SECRET, { expiresIn: "2h" })
             return res.status(200).json({ token: token })
@@ -78,6 +80,7 @@ router.put("/:id", (req, res) => {
         if (loggedInUser.id === user.id) {
             db.User.update({
                 name: req.body.name,
+                accountName: req.body.accountName,
                 email: req.body.email,
                 password: req.body.password
             }, {
@@ -134,6 +137,7 @@ router.get("/secretProfile", (req, res) => {
         },
         include: [
             db.Recipes,
+            db.SavedRecipes,
             db.Ingredients,
             db.Steps
         ]
