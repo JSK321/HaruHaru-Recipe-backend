@@ -126,6 +126,16 @@ router.delete("/:id", (req, res) => {
         }
     }).then(foundRecipe => {
         if (loggedInUser.id === foundRecipe.UserId) {
+            db.Ingredients.destroy({
+                where: {
+                    RecipeId: foundRecipe.id
+                }
+            })
+            db.SavedRecipes.destroy({
+                where: {
+                    recipeId: foundRecipe.id 
+                }
+            })
             db.Recipes.destroy({
                 where: {
                     id: foundRecipe.id

@@ -78,7 +78,7 @@ router.put("/:id", (req, res) => {
         }
     }).then(user => {
         if (loggedInUser.id === user.id) {
-            db.User.update({
+            db.Users.update({
                 name: req.body.name,
                 accountName: req.body.accountName,
                 email: req.body.email,
@@ -148,5 +148,24 @@ router.get("/secretProfile", (req, res) => {
         res.status(500).send(err)
     })
 })
+
+// router.get("/:id", (req,res) => {
+//     db.Users.findOne({
+//         where: {
+//             id: req.params.id
+//         },
+//         include: [
+//             db.Recipes,
+//             db.SavedRecipes,
+//             db.Ingredients,
+//             db.Steps
+//         ]
+//     }).then(data => {
+//         res.json(data)
+//     }).catch(err => {
+//         console.log(err)
+//         res.status(500).send("Unable to find user")
+//     })
+// })
 
 module.exports = router
