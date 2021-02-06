@@ -51,6 +51,23 @@ router.get("/:id", (req, res) => {
     })
 })
 
+router.get("/category/:recipeCategory", (req, res,) => {
+    db.Recipes.findAll({
+        where: {
+            recipeCategory: req.params.recipeCategory
+        },
+        include: [
+            db.Ingredients,
+            db.Steps
+        ]
+    }).then(recipe => {
+        res.json(recipe)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to find breakfast recipe")
+    })
+})
+
 router.post("/", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
@@ -58,6 +75,7 @@ router.post("/", (req, res) => {
     }
     db.Recipes.create({
         recipeName: req.body.recipeName,
+        recipeCategory: req.body.recipeCategory,
         recipeDescript: req.body.recipeDescript,
         recipeImage: req.body.recipeImage,
         UserId: loggedInUser.id,
@@ -96,6 +114,7 @@ router.put("/:id", (req, res) => {
         if (loggedInUser.id === foundRecipe.UserId) {
             db.Recipes.update({
                 recipeName: req.body.recipeName,
+                recipeCategory: req.body.recipeCategory,
                 recipeDescript: req.body.recipeDescript,
                 recipeImage: req.body.recipeImage
             },
@@ -133,7 +152,12 @@ router.delete("/:id", (req, res) => {
             })
             db.SavedRecipes.destroy({
                 where: {
-                    recipeId: foundRecipe.id 
+                    recipeId: foundRecipe.id
+                }
+            })
+            db.Steps.destroy({
+                where: {
+                    RecipeId: foundRecipe.id
                 }
             })
             db.Recipes.destroy({

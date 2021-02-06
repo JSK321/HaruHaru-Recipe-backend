@@ -21,7 +21,7 @@ const checkAuthStatus = request => {
     return loggedInUser
 }
 
-router.get("/", (req,res) => {
+router.get("/", (req, res) => {
     db.Ingredients.findAll({
     }).then(data => {
         res.json(data)
@@ -31,7 +31,7 @@ router.get("/", (req,res) => {
     })
 })
 
-router.get("/all/:id", (req,res) => {
+router.get("/all/:id", (req, res) => {
     db.Ingredients.findAll({
         where: {
             RecipeId: req.params.id
@@ -44,7 +44,7 @@ router.get("/all/:id", (req,res) => {
     })
 })
 
-router.get("/:id", (req,res) => {
+router.get("/:id", (req, res) => {
     db.Ingredients.findOne({
         where: {
             id: req.params.id
@@ -57,16 +57,16 @@ router.get("/:id", (req,res) => {
     })
 })
 
-router.post("/", (req,res) => {
+router.post("/", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
-    if(!loggedInUser){
+    if (!loggedInUser) {
         return res.status(401).send("Please login first")
     }
     db.Ingredients.create({
         ingredient: req.body.ingredient,
         ingredientQuant: req.body.ingredientQuant,
         ingredientUnit: req.body.ingredientUnit,
-        RecipeId: req.body.RecipeId,   
+        RecipeId: req.body.RecipeId,
         UserId: loggedInUser.id
     }).then(result => {
         res.json(result)
@@ -76,7 +76,7 @@ router.post("/", (req,res) => {
     })
 })
 
-router.put("/:id", (req,res) => {
+router.put("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
@@ -86,30 +86,30 @@ router.put("/:id", (req,res) => {
             id: req.params.id
         }
     }).then(data => {
-        if(loggedInUser.id === data.UserId){
+        if (loggedInUser.id === data.UserId) {
             db.Ingredients.update({
                 ingredient: req.body.ingredient,
                 ingredientQuant: req.body.ingredientQuant,
                 ingredientUnit: req.body.ingredientUnit,
                 RecipeId: req.body.RecipeId
             },
-            {
-                where: {
-                    id: data.id
-                }
-            }).then(result => {
-                res.json(result)
-            }).catch(err => {
-                console.log(err)
-                res.status(500).send("Unable to find ingredient")
-            })
+                {
+                    where: {
+                        id: data.id
+                    }
+                }).then(result => {
+                    res.json(result)
+                }).catch(err => {
+                    console.log(err)
+                    res.status(500).send("Unable to find ingredient")
+                })
         } else {
             return res.status(401).send("Not your recipe!")
         }
     })
 })
 
-router.delete("/:id", (req,res)=> {
+router.delete("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
         return res.status(401).send("Please login first")
@@ -119,7 +119,7 @@ router.delete("/:id", (req,res)=> {
             id: req.params.id
         }
     }).then(data => {
-        if(loggedInUser.id === data.UserId){
+        if (loggedInUser.id === data.UserId) {
             db.Ingredients.destroy({
                 where: {
                     id: data.id

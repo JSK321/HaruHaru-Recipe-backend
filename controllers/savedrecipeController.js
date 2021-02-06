@@ -84,18 +84,16 @@ router.post("/upload", async (req, res) => {
 //     }
 //     db.SavedRecipes.findOne({
 //         where: {
-//             id: req.params.id
+//             recipeId: req.params.id
 //         }
 //     }).then(foundRecipe => {
 //         if (loggedInUser.id === foundRecipe.UserId) {
 //             db.SavedRecipes.update({
 //                 recipeName: req.body.recipeName,
-//                 recipeDescript: req.body.recipeDescript,
-//                 recipeImage: req.body.recipeImage
 //             },
 //                 {
 //                     where: {
-//                         id: foundRecipe.id
+//                         recipeId: foundRecipe.id
 //                     }
 //                 }).then(updatedRecipe => {
 //                     res.json(updatedRecipe)
@@ -108,6 +106,28 @@ router.post("/upload", async (req, res) => {
 //         }
 //     })
 // })
+
+router.put("/:id", (req, res) => {
+    db.SavedRecipes.findOne({
+        where: {
+            recipeId: req.params.id
+        },
+    }).then(foundRecipe => {
+        db.SavedRecipes.update({
+            recipeName: req.body.recipeName,
+        },
+            {
+                where: {
+                    recipeId: req.params.id
+                }
+            }).then(updatedRecipe => {
+                res.json(updatedRecipe)
+            }).catch(err => {
+                console.log(err)
+                res.status(500).send("Unable to find recipe")
+            })
+    })
+})
 
 router.delete("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)

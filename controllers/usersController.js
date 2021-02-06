@@ -77,12 +77,17 @@ router.put("/:id", (req, res) => {
             id: req.params.id
         }
     }).then(user => {
-        if (loggedInUser.id === user.id) {
+        if (loggedInUser.id === user.id &&
+            bcrypt.compareSync(req.body.password, user.password) &&
+            user.password !== req.body.newPassword &&
+            req.body.newPassword === req.body.confirmNewPassword
+        ) {
             db.Users.update({
                 name: req.body.name,
-                accountName: req.body.accountName,
                 email: req.body.email,
-                password: req.body.password
+                accountName: req.body.accountName,
+                password: req.body.newPassword,
+                profileImage: req.body.profileImage
             }, {
                 where: {
                     id: user.id
@@ -90,8 +95,21 @@ router.put("/:id", (req, res) => {
             }).then(editUser => {
                 res.json(editUser)
             }).catch(err => {
-                console.log(err)
-                res.status(500).send("Unable to find profile")
+                if (err.errors[0].message === "users.accountName must be unique") {
+                    return res.status(409).send("Account name is taken, please choose another accout name.")
+                }
+                else if (err.errors[0].message === "users.email must be unique") {
+                    return res.status(409).send("Email is already in use.")
+                } else if (loggedInUser.id === user.id && bcrypt.compare(req.body.password, user.password)) {
+                    return res.status(401).send("Incorrect password, please try again")
+                } 
+                // else if (loggedInUser.id === user.id && bcrypt.compare(req.body.password, user.password)
+                //     && req.body.newPassword !== req.body.confirmNewPassword) {
+                //     return res.status(400).send("New password does not match, please try again")
+                // }
+                else {
+                    return res.status(500).send("Unable to find profile")
+                }
             })
         } else {
             return res.status(401).send("Not your profile!")
@@ -110,7 +128,7 @@ router.delete("/:id", (req, res) => {
         }
     }).then(user => {
         if (loggedInUser.id === user.id) {
-            db.User.destroy({
+            db.Users.destroy({
                 where: {
                     id: user.id
                 }
