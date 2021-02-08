@@ -167,23 +167,36 @@ router.get("/secretProfile", (req, res) => {
     })
 })
 
-// router.get("/:id", (req,res) => {
-//     db.Users.findOne({
-//         where: {
-//             id: req.params.id
-//         },
-//         include: [
-//             db.Recipes,
-//             db.SavedRecipes,
-//             db.Ingredients,
-//             db.Steps
-//         ]
-//     }).then(data => {
-//         res.json(data)
-//     }).catch(err => {
-//         console.log(err)
-//         res.status(500).send("Unable to find user")
-//     })
-// })
+router.get("/profile/:accountName", (req,res) => {
+    db.Users.findOne({
+        where: {
+            accountName: req.params.accountName
+        },
+        include: [
+            db.Recipes,
+            db.SavedRecipes,
+            db.Ingredients,
+            db.Steps
+        ]
+    }).then(data => {
+        res.json(data)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to find user")
+    })
+})
+
+router.get("/:id", (req,res) => {
+    db.Users.findOne({
+        where: {
+            id: req.params.id
+        },
+    }).then(data => {
+        res.json(data)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to find user")
+    })
+})
 
 module.exports = router
