@@ -79,6 +79,7 @@ router.post("/", (req, res) => {
         recipeDescript: req.body.recipeDescript,
         recipeImage: req.body.recipeImage,
         UserId: loggedInUser.id,
+        numberOfLikes: 0
     }).then(newRecipe => {
         res.json(newRecipe)
     }).catch(err => {
@@ -131,6 +132,28 @@ router.put("/:id", (req, res) => {
         } else {
             return res.status(401).send("Not your recipe!")
         }
+    })
+})
+router.put("/likes/:id", (req, res) => {
+    db.Recipes.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(foundRecipe => {
+        db.Recipes.update({
+            numberOfLikes: req.body.numberOfLikes
+        },
+            {
+                where: {
+                    id: foundRecipe.id
+                }
+            }).then(updatedRecipe => {
+                res.json(updatedRecipe)
+            }).catch(err => {
+                console.log(err)
+                res.status(500).send("Unable to find recipe")
+            })
+
     })
 })
 

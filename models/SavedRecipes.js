@@ -4,7 +4,6 @@ module.exports = function (sequelize, DataTypes) {
         ownerId: DataTypes.INTEGER,
         savedByUser: DataTypes.STRING,
         recipeId: DataTypes.INTEGER,
-        numberOfLikes: DataTypes.INTEGER,
         isSaved: DataTypes.BOOLEAN
     })
 

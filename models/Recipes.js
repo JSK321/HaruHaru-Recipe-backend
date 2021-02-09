@@ -3,6 +3,7 @@ module.exports = function (sequelize, DataTypes) {
         recipeName: DataTypes.STRING(30),
         recipeDescript: DataTypes.TEXT,
         recipeCategory: DataTypes.STRING,
+        numberOfLikes: DataTypes.INTEGER,
         recipeImage: {
             type: DataTypes.STRING,
             allowNull: true
