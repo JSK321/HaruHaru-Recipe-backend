@@ -3,8 +3,7 @@ module.exports = function (sequelize, DataTypes) {
         recipeName: DataTypes.STRING,
         ownerId: DataTypes.INTEGER,
         savedByUser: DataTypes.STRING,
-        recipeId: DataTypes.INTEGER,
-        isSaved: DataTypes.BOOLEAN
+        recipeId: DataTypes.INTEGER
     })
 
     SavedRecipes.associate= function (models){

@@ -109,6 +109,41 @@ router.put("/:id", (req, res) => {
     })
 })
 
+// router.put("/all/:id", (req, res) => {
+//     const loggedInUser = checkAuthStatus(req)
+//     if (!loggedInUser) {
+//         return res.status(401).send("Please login first")
+//     }
+//     db.Ingredients.findOne({
+//         where: {
+//             RecipeId: req.params.id
+//         }
+//     }).then(data => {
+//         if (loggedInUser.id === data.UserId) {
+//             // console.log(data)
+//             db.Ingredients.update({
+//                 ingredient: req.body.ingredient,
+//                 ingredientQuant: req.body.ingredientQuant,
+//                 ingredientUnit: req.body.ingredientUnit,
+//                 RecipeId: req.body.RecipeId
+//             },
+//                 {
+//                     where: {
+//                         id: data.id
+//                     }
+//                 }).then(result => {
+//                     res.json(result)
+//                 }).catch(err => {
+//                     console.log(err)
+//                     res.status(500).send("Unable to find ingredient")
+//                 })
+//         } else {
+//             return res.status(401).send("Not your recipe!")
+//         }
+//     })
+// })
+
+
 router.delete("/:id", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {

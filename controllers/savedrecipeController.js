@@ -43,6 +43,19 @@ router.get("/:id", (req, res) => {
     })
 })
 
+router.get("/all/:id", (req, res) => {
+    db.SavedRecipes.findAll({
+        where: {
+            recipeId: req.params.id
+        }
+    }).then(recipe => {
+        res.json(recipe)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).send("Unable to find recipe")
+    })
+})
+
 router.post("/", (req, res) => {
     const loggedInUser = checkAuthStatus(req)
     if (!loggedInUser) {
@@ -54,7 +67,6 @@ router.post("/", (req, res) => {
         savedByUser: req.body.savedByUser,
         UserId: loggedInUser.id,
         recipeId: req.body.recipeId,
-        isSaved: req.body.isSaved
     }).then(newRecipe => {
         res.json(newRecipe)
     }).catch(err => {
@@ -76,36 +88,6 @@ router.post("/upload", async (req, res) => {
         res.status(500).json({ error: 'Something went wrong' })
     }
 })
-
-// router.put("/:id", (req, res) => {
-//     const loggedInUser = checkAuthStatus(req)
-//     if (!loggedInUser) {
-//         return res.status(401).send("Please login first")
-//     }
-//     db.SavedRecipes.findOne({
-//         where: {
-//             recipeId: req.params.id
-//         }
-//     }).then(foundRecipe => {
-//         if (loggedInUser.id === foundRecipe.UserId) {
-//             db.SavedRecipes.update({
-//                 recipeName: req.body.recipeName,
-//             },
-//                 {
-//                     where: {
-//                         recipeId: foundRecipe.id
-//                     }
-//                 }).then(updatedRecipe => {
-//                     res.json(updatedRecipe)
-//                 }).catch(err => {
-//                     console.log(err)
-//                     res.status(500).send("Unable to find recipe")
-//                 })
-//         } else {
-//             return res.status(401).send("Not your recipe!")
-//         }
-//     })
-// })
 
 router.put("/:id", (req, res) => {
     db.SavedRecipes.findOne({
@@ -140,15 +122,30 @@ router.delete("/:id", (req, res) => {
         }
     }).then(foundRecipe => {
         if (loggedInUser.id === foundRecipe.UserId) {
-            db.SavedRecipes.destroy({
+            db.Recipes.findOne({
                 where: {
-                    id: foundRecipe.id
+                    id: foundRecipe.recipeId
                 }
-            }).then(removedRecipe => {
-                res.json(removedRecipe)
-            }).catch(err => {
-                console.log(err)
-                res.status(500).send("Unable to find recipe")
+            }).then(data => {
+                db.Recipes.update({
+                    numberOfLikes: data._previousDataValues.numberOfLikes - 1
+                },
+                    {
+                        where: {
+                            id: data.id
+                        }
+                    }).then(afterUpdate => {
+                        db.SavedRecipes.destroy({
+                            where: {
+                                id: foundRecipe.id
+                            }
+                        }).then(removedRecipe => {
+                            res.json(removedRecipe)
+                        }).catch(err => {
+                            console.log(err)
+                            res.status(500).send("Unable to find recipe")
+                        })
+                    })
             })
         } else {
             return res.status(401).send("Not your recipe!")
