@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes){
     var Ingredients = sequelize.define('Ingredients', {
         ingredient: DataTypes.STRING,
-        ingredientQuant: DataTypes.INTEGER,
+        ingredientQuant: DataTypes.DECIMAL(10,2),
         ingredientUnit: DataTypes.STRING,
         RecipeId: DataTypes.INTEGER
     })
