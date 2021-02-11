@@ -10,7 +10,7 @@ const stepsRoutes = require('./stepsController')
 
 
 router.get("/", (req, res) => {
-    res.send("welcome")
+    res.send("Welcome, this is the backend server for HarHaru recipes. View the application at https://haruharurecipe.herokuapp.com/")
 })
 
 
