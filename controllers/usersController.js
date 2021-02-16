@@ -38,8 +38,14 @@ router.post("/", (req, res) => {
     }).then(newUser => {
         res.json(newUser)
     }).catch(err => {
-        console.log(err)
-        res.status(500).end()
+        if (err.errors[0].message === "users.accountName must be unique") {
+            return res.status(409).send("Account name is taken, please choose another accout name.")
+        }
+        else if (err.errors[0].message === "users.email must be unique") {
+            return res.status(409).send("Email is already in use.")
+        } else {
+            res.status(500).end()
+        }
     })
 })
 
@@ -102,7 +108,7 @@ router.put("/:id", (req, res) => {
                     return res.status(409).send("Email is already in use.")
                 } else if (loggedInUser.id === user.id && bcrypt.compare(req.body.password, user.password)) {
                     return res.status(401).send("Incorrect password, please try again")
-                } 
+                }
                 // else if (loggedInUser.id === user.id && bcrypt.compare(req.body.password, user.password)
                 //     && req.body.newPassword !== req.body.confirmNewPassword) {
                 //     return res.status(400).send("New password does not match, please try again")
@@ -167,7 +173,7 @@ router.get("/secretProfile", (req, res) => {
     })
 })
 
-router.get("/profile/:accountName", (req,res) => {
+router.get("/profile/:accountName", (req, res) => {
     db.Users.findOne({
         where: {
             accountName: req.params.accountName
@@ -186,7 +192,7 @@ router.get("/profile/:accountName", (req,res) => {
     })
 })
 
-router.get("/:id", (req,res) => {
+router.get("/:id", (req, res) => {
     db.Users.findOne({
         where: {
             id: req.params.id
